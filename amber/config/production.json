@@ -1,0 +1,6 @@
+{
+  "client_urls": "*",
+  "amber_studio_url": "https://amber-studio.example.org",
+  "amber_collect_url": "https://amber-collect.example.org",
+  "encrypt_data": true
+}
