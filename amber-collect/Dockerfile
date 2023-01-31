@@ -3,6 +3,7 @@ FROM obiba/amber-collect:latest as build-stage
 ARG AMBER_URL
 ARG RECAPTCHA_SITE_KEY
 WORKDIR /app
+# copy local files into the source folder
 COPY . .
 RUN yarn
 RUN quasar build --mode pwa
