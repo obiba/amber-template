@@ -49,6 +49,9 @@ The following is an example of a production set up that extends the proposed tem
 │   │   └── icons
 │   │       ├── android-icon-144x144.png
 │   │       └── ...
+│   ├── src
+│   │   └── css
+│   │       └── custom.scss
 │   └── settings.json
 ├── amber-studio
 │   ├── Dockerfile
@@ -57,6 +60,9 @@ The following is an example of a production set up that extends the proposed tem
 │   │   └── icons
 │   │       ├── android-icon-144x144.png
 │   │       └── ...
+│   ├── src
+│   │   └── css
+│   │       └── custom.scss
 │   └── settings.json
 ├── .env
 └── docker-compose.yml
