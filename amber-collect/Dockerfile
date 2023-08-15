@@ -6,7 +6,7 @@ WORKDIR /app
 # copy local files into the source folder
 COPY . .
 RUN yarn
-RUN quasar build --mode pwa
+RUN yarn quasar build --mode pwa
 
 # production stage
 FROM nginx:alpine as production-stage
