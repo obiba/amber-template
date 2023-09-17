@@ -12,12 +12,13 @@ services:
                         - APP_SECRET_KEY=${APP_SECRET_KEY}
                         - APP_SECRET_IV=${APP_SECRET_IV}
                         - ENCRYPT_DATA=true
-                        - CLIENT_URLS=${AMBER_STUDIO_URL},${AMBER_COLLECT_URL}
+                        - CLIENT_URLS=${AMBER_STUDIO_URL},${AMBER_COLLECT_URL},${AMBER_VISIT_URL}
                         - MONGODB_URL=mongodb://${MONGO_USER}:${MONGO_PWD}@mongo:27017/amber?authSource=admin
                         - ADMINISTRATOR_EMAIL=${ADMINISTRATOR_EMAIL}
                         - ADMINISTRATOR_PWD=${ADMINISTRATOR_PWD}
                         - AMBER_STUDIO_URL=${AMBER_STUDIO_URL}
                         - AMBER_COLLECT_URL=${AMBER_COLLECT_URL}
+                        - AMBER_VISIT_URL=${AMBER_VISIT_URL}
                         - RECAPTCHA_SECRET_KEY=${RECAPTCHA_SECRET_KEY}
                         - SENDINBLUE_API_KEY=${SENDINBLUE_API_KEY}
                         - FROM_EMAIL=${FROM_EMAIL}
@@ -37,6 +38,14 @@ services:
                                 - RECAPTCHA_SITE_KEY=${RECAPTCHA_SITE_KEY}
                 ports:
                         - "3090:80"
+        amber-visit:
+                build:
+                        context: ./amber-visit
+                        args:
+                                - AMBER_URL=${AMBER_URL}
+                                - RECAPTCHA_SITE_KEY=${RECAPTCHA_SITE_KEY}
+                ports:
+                        - "3070:80"
         mongo:
                 image: mongo
                 environment:
