@@ -1,12 +1,12 @@
 # build stage
-FROM obiba/amber-studio:latest as build-stage
+FROM obiba/amber-studio:snapshot as build-stage
 ARG AMBER_URL
 ARG RECAPTCHA_SITE_KEY
+ARG PATH_PREFIX
 WORKDIR /app
 # copy local files into the source folder
 COPY . .
-RUN yarn
-RUN yarn quasar build
+RUN yarn && yarn quasar build
 
 # production stage
 FROM nginx:alpine as production-stage

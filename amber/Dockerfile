@@ -1,4 +1,4 @@
-FROM obiba/amber:latest
+FROM obiba/amber:snapshot
 
 WORKDIR /usr/src/app/amber
 
