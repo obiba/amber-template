@@ -1,11 +1,12 @@
 version: '3'
 services:
         reverse-proxy:
-                image: traefik:v2.9
+                image: traefik:v2.10
                 command:
                         - "--providers.docker"
                         - "--providers.file.directory=/configuration/"
                         - "--entrypoints.web.address=:80"
+                        ## uncomment for https support
                         # - "--entrypoints.web.http.redirections.entryPoint.to=websecure"
                         # - "--entrypoints.web.http.redirections.entryPoint.scheme=https"
                         # - "--entrypoints.web.http.redirections.entrypoint.permanent=true"
@@ -68,8 +69,6 @@ services:
                         - "traefik.http.routers.studio.middlewares=studio-middleware"
                         - "traefik.http.middlewares.studio-middleware.stripprefix.prefixes=/studio"
                 restart: unless-stopped
-                extra_hosts:
-                        - "host.docker.internal:host-gateway"
         collect:
                 build:
                         context: ./amber-collect
@@ -87,8 +86,6 @@ services:
                         - "traefik.http.routers.collect.middlewares=collect-middleware"
                         - "traefik.http.middlewares.collect-middleware.stripprefix.prefixes=/collect"
                 restart: unless-stopped
-                extra_hosts:
-                        - "host.docker.internal:host-gateway"
         visit:
                 build:
                         context: ./amber-visit
@@ -106,8 +103,6 @@ services:
                         - "traefik.http.routers.visit.middlewares=visit-middleware"
                         - "traefik.http.middlewares.visit-middleware.stripprefix.prefixes=/visit"
                 restart: unless-stopped
-                extra_hosts:
-                        - "host.docker.internal:host-gateway"
         mongo:
                 image: mongo
                 environment:
