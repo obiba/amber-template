@@ -28,6 +28,8 @@ services:
                         - 3030
                 links:
                         - mongo
+                depends_on:
+                        - mongo
                 environment:
                         - APP_NAME=${APP_NAME}
                         - APP_URL=${AMBER_URL}
