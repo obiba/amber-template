@@ -22,6 +22,17 @@ services:
                         - /var/run/docker.sock:/var/run/docker.sock:ro
                         - ./traefik.yaml:/configuration/traefik.yml
                         - /etc/ssl:/etc/ssl
+        home:
+                build: ./home
+                expose:
+                        - 80
+                labels:
+                        - "traefik.http.routers.home.priority=100"
+                        # - "traefik.http.routers.home.tls=true"
+                        - "traefik.http.routers.home.rule=PathPrefix(`/`)"
+                        - "traefik.http.services.home.loadbalancer.server.port=80"
+                        - "traefik.http.routers.home.middlewares=home-middleware"
+                        - "traefik.http.middlewares.home-middleware.stripprefix.prefixes=/"
         amber:
                 build: ./amber
                 expose:
