@@ -1,5 +1,5 @@
 # build stage
-FROM obiba/amber-studio:snapshot as build-stage
+FROM obiba/amber-studio:latest as build-stage
 ARG AMBER_URL
 ARG RECAPTCHA_SITE_KEY
 ARG PATH_PREFIX
