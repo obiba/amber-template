@@ -1,10 +1,11 @@
-run:
-	docker compose pull
-	docker compose build --parallel --no-cache
-	docker compose up -d --remove-orphans
+run: build up
 
 logs:
 	docker compose logs -f
+
+build:
+	docker compose pull
+	docker compose build --pull --parallel --no-cache
 
 up:
 	docker compose up -d --remove-orphans
