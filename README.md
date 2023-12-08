@@ -29,6 +29,17 @@ Optionally, some source files can be modified as well:
 * [public](https://github.com/obiba/amber-collect/tree/main/public) folder that contains the app icons.
 * [src/css](https://github.com/obiba/amber-collect/tree/main/src/css) folder that contains the [SCSS](https://sass-lang.com/documentation/syntax) files.
 
+Amber Visit app Dockerfile
+----------------------------
+
+Amber Collect is a [Quasar SPA](https://quasar.dev/quasar-cli-vite/developing-spa/introduction) (single page application) web app delivered by a [NGINX](https://www.nginx.com/) web server. The web app **must** be built with the site specific settings such as the Amber server URL and the [reCAPTCHA](https://developers.google.com/recaptcha/) site key.
+
+Optionally, some source files can be modified as well:
+
+* [settings.json](https://github.com/obiba/amber-visit/blob/main/settings.json) file that is a simple way of tweaking the default theme and for adding new languages.
+* [public](https://github.com/obiba/amber-visitt/tree/main/public) folder that contains the app icons.
+* [src/css](https://github.com/obiba/amber-visit/tree/main/src/css) folder that contains the [SCSS](https://sass-lang.com/documentation/syntax) files.
+
 Amber Docker Compose
 --------------------
 
@@ -43,6 +54,17 @@ The following is an example of a production set up that extends the proposed tem
 │   │   └── production.json
 │   └── Dockerfile
 ├── amber-collect
+│   ├── Dockerfile
+│   ├── public
+│   │   ├── favicon.ico
+│   │   └── icons
+│   │       ├── android-icon-144x144.png
+│   │       └── ...
+│   ├── src
+│   │   └── css
+│   │       └── custom.scss
+│   └── settings.json
+├── amber-visit
 │   ├── Dockerfile
 │   ├── public
 │   │   ├── favicon.ico

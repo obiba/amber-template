@@ -1,10 +1,45 @@
 version: '3'
 services:
+        reverse-proxy:
+                image: traefik:v2.10
+                command:
+                        - "--providers.docker"
+                        - "--providers.file.directory=/configuration/"
+                        - "--entrypoints.web.address=:80"
+                        ## uncomment for https support
+                        # - "--entrypoints.web.http.redirections.entryPoint.to=websecure"
+                        # - "--entrypoints.web.http.redirections.entryPoint.scheme=https"
+                        # - "--entrypoints.web.http.redirections.entrypoint.permanent=true"
+                        # - "--entrypoints.websecure.address=:443"
+                environment:
+                        - SSL_CERT_CRT=${SSL_CERT_CRT}
+                        - SSL_CERT_KEY=${SSL_CERT_KEY}
+                ports:
+                        - "8888:80"
+                        # - "8843:443"
+                restart: unless-stopped
+                volumes:
+                        - /var/run/docker.sock:/var/run/docker.sock:ro
+                        - ./traefik.yaml:/configuration/traefik.yml
+                        - /etc/ssl:/etc/ssl
+        home:
+                build: ./home
+                expose:
+                        - 80
+                labels:
+                        - "traefik.http.routers.home.priority=100"
+                        # - "traefik.http.routers.home.tls=true"
+                        - "traefik.http.routers.home.rule=PathPrefix(`/`)"
+                        - "traefik.http.services.home.loadbalancer.server.port=80"
+                        - "traefik.http.routers.home.middlewares=home-middleware"
+                        - "traefik.http.middlewares.home-middleware.stripprefix.prefixes=/"
         amber:
                 build: ./amber
-                ports:
-                        - "3030:3030"
+                expose:
+                        - 3030
                 links:
+                        - mongo
+                depends_on:
                         - mongo
                 environment:
                         - APP_NAME=${APP_NAME}
@@ -12,31 +47,75 @@ services:
                         - APP_SECRET_KEY=${APP_SECRET_KEY}
                         - APP_SECRET_IV=${APP_SECRET_IV}
                         - ENCRYPT_DATA=true
-                        - CLIENT_URLS=${AMBER_STUDIO_URL},${AMBER_COLLECT_URL}
+                        - CLIENT_URLS=${CLIENT_URLS}
                         - MONGODB_URL=mongodb://${MONGO_USER}:${MONGO_PWD}@mongo:27017/amber?authSource=admin
                         - ADMINISTRATOR_EMAIL=${ADMINISTRATOR_EMAIL}
                         - ADMINISTRATOR_PWD=${ADMINISTRATOR_PWD}
                         - AMBER_STUDIO_URL=${AMBER_STUDIO_URL}
                         - AMBER_COLLECT_URL=${AMBER_COLLECT_URL}
+                        - AMBER_VISIT_URL=${AMBER_VISIT_URL}
                         - RECAPTCHA_SECRET_KEY=${RECAPTCHA_SECRET_KEY}
                         - SENDINBLUE_API_KEY=${SENDINBLUE_API_KEY}
                         - FROM_EMAIL=${FROM_EMAIL}
-        amber-studio:
+                labels:
+                        - "traefik.http.routers.amber.priority=1000"
+                        # - "traefik.http.routers.amber.tls=true"
+                        - "traefik.http.routers.amber.rule=PathPrefix(`/api`)"
+                        - "traefik.http.services.amber.loadbalancer.server.port=3030"
+                        - "traefik.http.routers.amber.middlewares=amber-middleware"
+                        - "traefik.http.middlewares.amber-middleware.stripprefix.prefixes=/api"
+                restart: unless-stopped
+        studio:
                 build:
                         context: ./amber-studio
                         args:
                                 - AMBER_URL=${AMBER_URL}
                                 - RECAPTCHA_SITE_KEY=${RECAPTCHA_SITE_KEY}
-                ports:
-                        - "3080:80"
-        amber-collect:
+                                - PATH_PREFIX=/studio
+                expose:
+                        - 80
+                labels:
+                        - "traefik.http.routers.studio.priority=500"
+                        # - "traefik.http.routers.studio.tls=true"
+                        - "traefik.http.routers.studio.rule=PathPrefix(`/studio`)"
+                        - "traefik.http.services.studio.loadbalancer.server.port=80"
+                        - "traefik.http.routers.studio.middlewares=studio-middleware"
+                        - "traefik.http.middlewares.studio-middleware.stripprefix.prefixes=/studio"
+                restart: unless-stopped
+        collect:
                 build:
                         context: ./amber-collect
                         args:
                                 - AMBER_URL=${AMBER_URL}
                                 - RECAPTCHA_SITE_KEY=${RECAPTCHA_SITE_KEY}
-                ports:
-                        - "3090:80"
+                                - PATH_PREFIX=/collect
+                expose:
+                        - 80
+                labels:
+                        - "traefik.http.routers.collect.priority=500"
+                        # - "traefik.http.routers.collect.tls=true"
+                        - "traefik.http.routers.collect.rule=PathPrefix(`/collect`)"
+                        - "traefik.http.services.collect.loadbalancer.server.port=80"
+                        - "traefik.http.routers.collect.middlewares=collect-middleware"
+                        - "traefik.http.middlewares.collect-middleware.stripprefix.prefixes=/collect"
+                restart: unless-stopped
+        visit:
+                build:
+                        context: ./amber-visit
+                        args:
+                                - AMBER_URL=${AMBER_URL}
+                                - RECAPTCHA_SITE_KEY=${RECAPTCHA_SITE_KEY}
+                                - PATH_PREFIX=/visit
+                expose:
+                        - 80
+                labels:
+                        - "traefik.http.routers.visit.priority=500"
+                        # - "traefik.http.routers.visit.tls=true"
+                        - "traefik.http.routers.visit.rule=PathPrefix(`/visit`)"
+                        - "traefik.http.services.visit.loadbalancer.server.port=80"
+                        - "traefik.http.routers.visit.middlewares=visit-middleware"
+                        - "traefik.http.middlewares.visit-middleware.stripprefix.prefixes=/visit"
+                restart: unless-stopped
         mongo:
                 image: mongo
                 environment:
