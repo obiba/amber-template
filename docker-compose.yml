@@ -1,6 +1,7 @@
-version: '3'
 services:
         reverse-proxy:
+                user: root
+                userns_mode: host
                 image: traefik:v2.10
                 command:
                         - "--providers.docker"
@@ -19,7 +20,7 @@ services:
                         # - "8843:443"
                 restart: unless-stopped
                 volumes:
-                        - /var/run/docker.sock:/var/run/docker.sock:ro
+                        - /var/run/docker.sock:/var/run/docker.sock
                         - ./traefik.yaml:/configuration/traefik.yml
                         - /etc/ssl:/etc/ssl
         home:
