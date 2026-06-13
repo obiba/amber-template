@@ -58,35 +58,26 @@ The following is an example of a production set up that extends the proposed tem
 |       |   └── ...
 │       └── production.json
 ├── amber-collect
-│   ├── public
-│   │   ├── favicon.ico
-│   │   └── icons
-│   │       ├── android-icon-144x144.png
-│   │       └── ...
-│   ├── src
-│   │   └── css
-│   │       └── custom.scss
-│   └── settings.json
+│   └── public
+│       ├── favicon.ico
+│       ├── icons
+│       │   ├── android-icon-144x144.png
+│       │   └── ...
+│       └── settings.json
 ├── amber-visit
-│   ├── public
-│   │   ├── favicon.ico
-│   │   └── icons
-│   │       ├── android-icon-144x144.png
-│   │       └── ...
-│   ├── src
-│   │   └── css
-│   │       └── custom.scss
-│   └── settings.json
+│   └── public
+│       ├── favicon.ico
+│       ├── icons
+│       │   ├── android-icon-144x144.png
+│       │   └── ...
+│       └── settings.json
 ├── amber-studio
-│   ├── public
-│   │   ├── favicon.ico
-│   │   └── icons
-│   │       ├── android-icon-144x144.png
-│   │       └── ...
-│   ├── src
-│   │   └── css
-│   │       └── custom.scss
-│   └── settings.json
+│   └── public
+│       ├── favicon.ico
+│       ├── icons
+│       │   ├── android-icon-144x144.png
+│       │   └── ...
+│       └── settings.json
 ├── home
 │   └── index.html
 ├── .env

@@ -71,7 +71,7 @@ services:
                         - "traefik.http.routers.amber.middlewares=amber-middleware"
                         - "traefik.http.middlewares.amber-middleware.stripprefix.prefixes=/api"
                 volumes:
-                        - ./amber/config/production.json:/usr/src/app/amber/config/production.json
+                        - ./amber/config/production.json:/usr/src/app/config/production.json
                 networks:
                         - ambertemplatenet
                 restart: unless-stopped
@@ -93,7 +93,7 @@ services:
                         - "traefik.http.routers.studio.middlewares=studio-middleware"
                         - "traefik.http.middlewares.studio-middleware.stripprefix.prefixes=/studio"
                 volumes:
-                        - ./amber-studio/settings.json:/app/settings.json
+                        - ./amber-studio/public:/app/public
                 networks:
                         - ambertemplatenet
                 restart: unless-stopped
@@ -115,7 +115,7 @@ services:
                         - "traefik.http.routers.collect.middlewares=collect-middleware"
                         - "traefik.http.middlewares.collect-middleware.stripprefix.prefixes=/collect"
                 volumes:
-                        - ./amber-collect/settings.json:/app/settings.json
+                        - ./amber-collect/public:/app/public
                 networks:
                         - ambertemplatenet
                 restart: unless-stopped
@@ -137,7 +137,7 @@ services:
                         - "traefik.http.routers.visit.middlewares=visit-middleware"
                         - "traefik.http.middlewares.visit-middleware.stripprefix.prefixes=/visit"
                 volumes:
-                        - ./amber-visit/settings.json:/app/settings.json
+                        - ./amber-visit/public:/app/public
                 networks:
                         - ambertemplatenet
                 restart: unless-stopped
