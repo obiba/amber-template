@@ -3,10 +3,9 @@ run: build up
 logs:
 	docker compose logs -f
 
-build:
+pull:
 	docker compose pull
-	docker compose build --pull --parallel --no-cache
-
+	
 up:
 	docker compose up -d --remove-orphans
 
