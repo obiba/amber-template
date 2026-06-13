@@ -18,6 +18,7 @@ Optionally, some source files can be modified as well:
 * [public](https://github.com/obiba/amber-studio/tree/main/public) folder that contains the app icons.
 * [src/css](https://github.com/obiba/amber-studio/tree/main/src/css) folder that contains the [SCSS](https://sass-lang.com/documentation/syntax) files.
 
+
 ### Amber Collect app Dockerfile
 
 Amber Collect is a [Quasar PWA](https://quasar.dev/quasar-cli-vite/developing-pwa/introduction) (progressive web application) web app delivered by a [NGINX](https://www.nginx.com/) web server. The web app **must** be built with the site specific settings such as the Amber server URL and the [reCAPTCHA](https://developers.google.com/recaptcha/) site key.
@@ -35,8 +36,9 @@ Amber Visit is a [Quasar SPA](https://quasar.dev/quasar-cli-vite/developing-spa/
 Optionally, some source files can be modified as well:
 
 * [settings.json](https://github.com/obiba/amber-visit/blob/main/settings.json) file that is a simple way of tweaking the default theme and for adding new languages.
-* [public](https://github.com/obiba/amber-visitt/tree/main/public) folder that contains the app icons.
+* [public](https://github.com/obiba/amber-visit/tree/main/public) folder that contains the app icons.
 * [src/css](https://github.com/obiba/amber-visit/tree/main/src/css) folder that contains the [SCSS](https://sass-lang.com/documentation/syntax) files.
+
 
 ### Home Page
 
@@ -51,13 +53,11 @@ The following is an example of a production set up that extends the proposed tem
 ```
 .
 ├── amber
-│   ├── config
-│   │   ├── email_templates
-|   |   |   └── ...
-│   │   └── production.json
-│   └── Dockerfile
+│   └── config
+│       ├── email_templates
+|       |   └── ...
+│       └── production.json
 ├── amber-collect
-│   ├── Dockerfile
 │   ├── public
 │   │   ├── favicon.ico
 │   │   └── icons
@@ -68,7 +68,6 @@ The following is an example of a production set up that extends the proposed tem
 │   │       └── custom.scss
 │   └── settings.json
 ├── amber-visit
-│   ├── Dockerfile
 │   ├── public
 │   │   ├── favicon.ico
 │   │   └── icons
@@ -79,7 +78,6 @@ The following is an example of a production set up that extends the proposed tem
 │   │       └── custom.scss
 │   └── settings.json
 ├── amber-studio
-│   ├── Dockerfile
 │   ├── public
 │   │   ├── favicon.ico
 │   │   └── icons
