@@ -148,5 +148,21 @@ services:
                         - MONGO_INITDB_ROOT_PASSWORD=${MONGO_PWD}
                 networks:
                         - ambertemplatenet
+        mongo-backup:
+                build: ./mongo-backup
+                depends_on:
+                        - mongo
+                environment:
+                        - MONGO_USER=${MONGO_USER}
+                        - MONGO_PWD=${MONGO_PWD}
+                        - BACKUP_SCHEDULE=${BACKUP_SCHEDULE:-0 2 * * *}
+                        - BACKUP_RETAIN_DAYS=${BACKUP_RETAIN_DAYS:-7}
+                volumes:
+                        - ./backups:/backups
+                networks:
+                        - ambertemplatenet
+                restart: unless-stopped
+                entrypoint: >
+                        bash -c "echo \"$${BACKUP_SCHEDULE} /backup.sh >> /var/log/mongo-backup.log 2>&1\" | crontab - && cron -f"
 networks:
         ambertemplatenet:
