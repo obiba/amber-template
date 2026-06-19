@@ -1,8 +1,9 @@
 services:
         reverse-proxy:
-                image: traefik:v3.2
+                image: traefik:v3.7.5
                 command:
                         - "--providers.docker"
+                        - "--providers.docker.constraints=Label(`traefik.project`, `amber-template`)"
                         - "--providers.file.directory=/configuration/"
                         - "--entrypoints.web.address=:80"
                         ## uncomment for https support
@@ -19,21 +20,27 @@ services:
                 restart: unless-stopped
                 volumes:
                         - /var/run/docker.sock:/var/run/docker.sock:ro
-                        - ./traefik.yaml:/configuration/traefik.yml
+                        - ./traefik.yml:/configuration/traefik.yml
                         - /etc/ssl:/etc/ssl
+                networks:
+                        - ambertemplatenet
         home:
                 build: ./home
                 expose:
                         - 80
                 labels:
+                        - "traefik.enable=true"
+                        - "traefik.project=amber-template"
                         - "traefik.http.routers.home.priority=100"
                         # - "traefik.http.routers.home.tls=true"
                         - "traefik.http.routers.home.rule=PathPrefix(`/`)"
                         - "traefik.http.services.home.loadbalancer.server.port=80"
                         - "traefik.http.routers.home.middlewares=home-middleware"
                         - "traefik.http.middlewares.home-middleware.stripprefix.prefixes=/"
+                networks:
+                        - ambertemplatenet
         amber:
-                build: ./amber
+                image: obiba/amber:snapshot
                 expose:
                         - 3030
                 depends_on:
@@ -55,66 +62,107 @@ services:
                         - SENDINBLUE_API_KEY=${SENDINBLUE_API_KEY}
                         - FROM_EMAIL=${FROM_EMAIL}
                 labels:
+                        - "traefik.enable=true"
+                        - "traefik.project=amber-template"
                         - "traefik.http.routers.amber.priority=1000"
                         # - "traefik.http.routers.amber.tls=true"
                         - "traefik.http.routers.amber.rule=PathPrefix(`/api`)"
                         - "traefik.http.services.amber.loadbalancer.server.port=3030"
                         - "traefik.http.routers.amber.middlewares=amber-middleware"
                         - "traefik.http.middlewares.amber-middleware.stripprefix.prefixes=/api"
+                volumes:
+                        - ./amber/config/production.json:/usr/src/app/config/production.json
+                networks:
+                        - ambertemplatenet
                 restart: unless-stopped
         studio:
-                build:
-                        context: ./amber-studio
-                        args:
-                                - AMBER_URL=${AMBER_URL}
-                                - RECAPTCHA_SITE_KEY=${RECAPTCHA_SITE_KEY}
-                                - PATH_PREFIX=/studio
+                image: obiba/amber-studio:snapshot
+                environment:
+                        - AMBER_URL=${AMBER_URL}
+                        - RECAPTCHA_SITE_KEY=${RECAPTCHA_SITE_KEY}
+                        - PATH_PREFIX=/studio/
                 expose:
                         - 80
                 labels:
+                        - "traefik.enable=true"
+                        - "traefik.project=amber-template"
                         - "traefik.http.routers.studio.priority=500"
                         # - "traefik.http.routers.studio.tls=true"
                         - "traefik.http.routers.studio.rule=PathPrefix(`/studio`)"
                         - "traefik.http.services.studio.loadbalancer.server.port=80"
                         - "traefik.http.routers.studio.middlewares=studio-middleware"
                         - "traefik.http.middlewares.studio-middleware.stripprefix.prefixes=/studio"
+                volumes:
+                        - ./amber-studio/public:/app/public
+                networks:
+                        - ambertemplatenet
                 restart: unless-stopped
         collect:
-                build:
-                        context: ./amber-collect
-                        args:
-                                - AMBER_URL=${AMBER_URL}
-                                - RECAPTCHA_SITE_KEY=${RECAPTCHA_SITE_KEY}
-                                - PATH_PREFIX=/collect
+                image: obiba/amber-collect:snapshot
+                environment:
+                        - AMBER_URL=${AMBER_URL}
+                        - RECAPTCHA_SITE_KEY=${RECAPTCHA_SITE_KEY}
+                        - PATH_PREFIX=/collect/
                 expose:
                         - 80
                 labels:
+                        - "traefik.enable=true"
+                        - "traefik.project=amber-template"
                         - "traefik.http.routers.collect.priority=500"
                         # - "traefik.http.routers.collect.tls=true"
                         - "traefik.http.routers.collect.rule=PathPrefix(`/collect`)"
                         - "traefik.http.services.collect.loadbalancer.server.port=80"
                         - "traefik.http.routers.collect.middlewares=collect-middleware"
                         - "traefik.http.middlewares.collect-middleware.stripprefix.prefixes=/collect"
+                volumes:
+                        - ./amber-collect/public:/app/public
+                networks:
+                        - ambertemplatenet
                 restart: unless-stopped
         visit:
-                build:
-                        context: ./amber-visit
-                        args:
-                                - AMBER_URL=${AMBER_URL}
-                                - RECAPTCHA_SITE_KEY=${RECAPTCHA_SITE_KEY}
-                                - PATH_PREFIX=/visit
+                image: obiba/amber-visit:snapshot
+                environment:
+                        - AMBER_URL=${AMBER_URL}
+                        - RECAPTCHA_SITE_KEY=${RECAPTCHA_SITE_KEY}
+                        - PATH_PREFIX=/visit/
                 expose:
                         - 80
                 labels:
+                        - "traefik.enable=true"
+                        - "traefik.project=amber-template"
                         - "traefik.http.routers.visit.priority=500"
                         # - "traefik.http.routers.visit.tls=true"
                         - "traefik.http.routers.visit.rule=PathPrefix(`/visit`)"
                         - "traefik.http.services.visit.loadbalancer.server.port=80"
                         - "traefik.http.routers.visit.middlewares=visit-middleware"
                         - "traefik.http.middlewares.visit-middleware.stripprefix.prefixes=/visit"
+                volumes:
+                        - ./amber-visit/public:/app/public
+                networks:
+                        - ambertemplatenet
                 restart: unless-stopped
         mongo:
                 image: mongo
                 environment:
                         - MONGO_INITDB_ROOT_USERNAME=${MONGO_USER}
                         - MONGO_INITDB_ROOT_PASSWORD=${MONGO_PWD}
+                networks:
+                        - ambertemplatenet
+        mongo-backup:
+                build: ./mongo-backup
+                depends_on:
+                        - mongo
+                environment:
+                        - MONGO_USER=${MONGO_USER}
+                        - MONGO_PWD=${MONGO_PWD}
+                        - BACKUP_SCHEDULE=${BACKUP_SCHEDULE:-0 2 * * *}
+                        - BACKUP_RETAIN_DAYS=${BACKUP_RETAIN_DAYS:-7}
+                volumes:
+                        - ./backups:/backups
+                networks:
+                        - ambertemplatenet
+                restart: unless-stopped
+                entrypoint: >
+                        bash -c "echo \"$${BACKUP_SCHEDULE} /backup.sh >> /var/log/mongo-backup.log 2>&1\" | crontab - && cron -f"
+networks:
+        ambertemplatenet:
