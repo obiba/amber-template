@@ -1,10 +1,10 @@
 {
   "theme": {
     "front": {
-      "bg": "bg-primary text-white",
+      "bg": "bg-white text-ink",
       "card": "bg-primary no-shadow"
     },
-    "header": "bg-primary text-white",
+    "header": "bg-white text-ink",
     "footer": "bg-grey-8 text-white"
   },
   "lock": {
@@ -17,12 +17,6 @@
       "caption": "amberdoc.obiba.org",
       "icon": "school",
       "link": "https://amberdoc.obiba.org/en/latest/collect-user-guide/"
-    },
-    {
-      "title": "main.forum",
-      "caption": "forum.obiba.org",
-      "icon": "record_voice_over",
-      "link": "https://forum.obiba.org"
     }
   ],
   "licenses": [
