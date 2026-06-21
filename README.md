@@ -111,6 +111,32 @@ docker compose exec mongo-backup /backup.sh
 
 Backup logs are written inside the container at `/var/log/mongo-backup.log`.
 
+### Amber Cron Tasks
+
+The `amber-cron-daily` and `amber-cron-monthly` services run scheduled HTTP tasks against the Amber server API using an API key for authentication.
+
+**Daily tasks** (`amber-cron-daily`) activate participant info, activate and remind participants, expire participant info, and deactivate participants.
+
+**Monthly tasks** (`amber-cron-monthly`) generate a participants summary.
+
+The schedules are controlled by environment variables in the `.env` file:
+
+| Variable | Default | Description |
+|---|---|---|
+| `AMBER_URL` | — | Base URL of the Amber server API (required) |
+| `APP_API_KEYS` | — | API key for authenticating task requests (required) |
+| `DAILY_SCHEDULE` | `0 1 * * *` | Cron expression for the daily tasks (default: 1 AM daily) |
+| `MONTHLY_SCHEDULE` | `0 2 1 * *` | Cron expression for the monthly tasks (default: 2 AM on the 1st of each month) |
+
+Logs are written to `./cron/logs/amber-daily.log` and `./cron/logs/amber-monthly.log`.
+
+To trigger a task manually:
+
+```
+docker compose exec amber-cron-daily /amber-daily.sh
+docker compose exec amber-cron-monthly /amber-monthly.sh
+```
+
 Note also the usage of the [Traefik](https://traefik.io/traefik/) reverse proxy that allows to set up the URLs on the same base like:
 
 * Home page: https://amber.example.org

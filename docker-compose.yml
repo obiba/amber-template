@@ -164,5 +164,33 @@ services:
                 restart: unless-stopped
                 entrypoint: >
                         bash -c "echo \"$${BACKUP_SCHEDULE} /backup.sh >> /var/log/mongo-backup.log 2>&1\" | crontab - && cron -f"
+        amber-cron-daily:
+                build: ./cron
+                depends_on:
+                        - amber
+                environment:
+                        - AMBER_URL=${AMBER_URL}
+                        - APP_API_KEYS=${APP_API_KEYS}
+                        - CRON_SCHEDULE=${DAILY_SCHEDULE:-0 1 * * *}
+                        - CRON_SCRIPT=/amber-daily.sh
+                volumes:
+                        - ./cron/logs:/logs
+                networks:
+                        - ambertemplatenet
+                restart: unless-stopped
+        amber-cron-monthly:
+                build: ./cron
+                depends_on:
+                        - amber
+                environment:
+                        - AMBER_URL=${AMBER_URL}
+                        - APP_API_KEYS=${APP_API_KEYS}
+                        - CRON_SCHEDULE=${MONTHLY_SCHEDULE:-0 2 1 * *}
+                        - CRON_SCRIPT=/amber-monthly.sh
+                volumes:
+                        - ./cron/logs:/logs
+                networks:
+                        - ambertemplatenet
+                restart: unless-stopped
 networks:
         ambertemplatenet:
