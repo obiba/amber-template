@@ -1,5 +1,8 @@
 run: build up
 
+build:
+	docker compose build
+
 logs:
 	docker compose logs -f
 
