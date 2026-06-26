@@ -59,7 +59,7 @@ services:
                         - AMBER_COLLECT_URL=${AMBER_COLLECT_URL}
                         - AMBER_VISIT_URL=${AMBER_VISIT_URL}
                         - RECAPTCHA_SECRET_KEY=${RECAPTCHA_SECRET_KEY}
-                        - SENDINBLUE_API_KEY=${SENDINBLUE_API_KEY}
+                        - BREVO_API_KEY=${BREVO_API_KEY}
                         - FROM_EMAIL=${FROM_EMAIL}
                 labels:
                         - "traefik.enable=true"
