@@ -40,7 +40,7 @@ services:
                 networks:
                         - ambertemplatenet
         amber:
-                image: obiba/amber:snapshot
+                image: obiba/amber:latest
                 expose:
                         - 3030
                 depends_on:
@@ -76,7 +76,7 @@ services:
                         - ambertemplatenet
                 restart: unless-stopped
         studio:
-                image: obiba/amber-studio:snapshot
+                image: obiba/amber-studio:latest
                 environment:
                         - AMBER_URL=${AMBER_URL}
                         - RECAPTCHA_SITE_KEY=${RECAPTCHA_SITE_KEY}
@@ -98,7 +98,7 @@ services:
                         - ambertemplatenet
                 restart: unless-stopped
         collect:
-                image: obiba/amber-collect:snapshot
+                image: obiba/amber-collect:latest
                 environment:
                         - AMBER_URL=${AMBER_URL}
                         - RECAPTCHA_SITE_KEY=${RECAPTCHA_SITE_KEY}
@@ -120,7 +120,7 @@ services:
                         - ambertemplatenet
                 restart: unless-stopped
         visit:
-                image: obiba/amber-visit:snapshot
+                image: obiba/amber-visit:latest
                 environment:
                         - AMBER_URL=${AMBER_URL}
                         - RECAPTCHA_SITE_KEY=${RECAPTCHA_SITE_KEY}
