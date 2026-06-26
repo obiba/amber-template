@@ -1,6 +1,8 @@
 services:
         reverse-proxy:
                 image: traefik:v3.7.5
+                #user: root
+                #userns_mode: host
                 command:
                         - "--providers.docker"
                         - "--providers.docker.constraints=Label(`traefik.project`, `amber-template`)"
